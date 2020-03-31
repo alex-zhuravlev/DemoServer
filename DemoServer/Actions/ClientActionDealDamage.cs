@@ -24,7 +24,8 @@ namespace DemoServer
 
         public override void Execute()
         {
-            GameClient.GameRoom.DealDamageToClient(GameClient.Id, m_iOpponentId, m_iDamageValue);
+            Operation oDealDamage = new OperationDealDamage(GameClient.Id, m_iOpponentId, m_iDamageValue);
+            GameClient.GameRoom.AddOperation(oDealDamage);
         }
     }
 }
