@@ -23,12 +23,12 @@ namespace DemoServer
             m_iHealValue = iHealValue;
         }
 
-        public override void Execute()
+        public override void Execute(GameRoom.GameStatus oGameStatus)
         {
-            int iIndex = GameStatus.Players.FindIndex(item => item.Id == m_iTargetPlayerId);
+            int iIndex = oGameStatus.Players.FindIndex(item => item.Id == m_iTargetPlayerId);
             if (iIndex != -1)
             {
-                GameStatus.Players[iIndex].Health += m_iHealValue;
+                oGameStatus.Players[iIndex].Health += m_iHealValue;
             }
         }
     }

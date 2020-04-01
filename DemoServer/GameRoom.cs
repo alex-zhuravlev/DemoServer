@@ -11,10 +11,9 @@ namespace DemoServer
         public class GameStatus
         {
             public List<Player> Players = new List<Player>();
-            public List<List<ulong>> Groups = new List<List<ulong>>(); // List of player Ids
+            public List<List<ulong>> Groups = new List<List<ulong>>(); // List of player Ids. TODO.
         }
 
-        private List<GameClient> m_aClients = new List<GameClient>();
         private GameStatus m_oGameStatus = new GameStatus();
         private ConcurrentQueue<Operation> m_aOperations = new ConcurrentQueue<Operation>();
 
@@ -27,45 +26,54 @@ namespace DemoServer
 
         public void Tick()
         {
-            for (int i = m_aClients.Count - 1; i >= 0; i--)
+            lock (m_oGameStatus)
             {
-                if(m_aClients[i].CanBeDeleted)
+                Operation oOperation = null;
+                while (m_aOperations.TryDequeue(out oOperation))
                 {
-                    ulong iId = m_aClients[i].Id;
-                    int iIndex = m_oGameStatus.Players.FindIndex(item => item.Id == iId);
-                    m_oGameStatus.Players.RemoveAt(iIndex);
-
-                    m_aClients.RemoveAt(i);
-                } 
+                    oOperation.Execute(m_oGameStatus);
+                }
             }
         }
 
-        public bool AddClient(GameClient oClient)
+        public bool AddPlayer(ulong iId)
         {
-            oClient.GameRoom = this;
-            m_aClients.Add(oClient);
-            m_oGameStatus.Players.Add(new Player(oClient.Id));
+            lock (m_oGameStatus)
+            {
+                if (m_oGameStatus.Players.Find(item => item.Id == iId) != null)
+                    return false; // Check for duplicates
+
+                m_oGameStatus.Players.Add(new Player(iId));
+            }
+            return true;
+        }
+
+        public bool RemovePlayer(ulong iId)
+        {
+            lock (m_oGameStatus)
+            {
+                int iIndex = m_oGameStatus.Players.FindIndex(item => item.Id == iId);
+                if (iIndex == -1)
+                    return false;
+
+                m_oGameStatus.Players.RemoveAt(iIndex);
+            }
             return true;
         }
 
         public void AddOperation(Operation o)
         {
-            o.GameStatus = m_oGameStatus;
+            o.GameRoom = this;
             m_aOperations.Enqueue(o);
         }
 
-        public void DealDamageToPlayer(ulong iSourcePlayer, ulong iTargetPlayer, int iValue)
+        public XmlDocument SaveGameStatusForClient(ulong iClientId)
         {
-            int iIndex = m_oGameStatus.Players.FindIndex(item => item.Id == iTargetPlayer);
-            if(iIndex != -1)
+            lock (m_oGameStatus)
             {
-                m_oGameStatus.Players[iIndex].Health -= iValue;
+                // TODO. Build up game data relative to iClientId (also limit by client's viewport)
+                return new XmlDocument();
             }
-        }
-
-        public XmlDocument SaveForClient(ulong iClientId)
-        {
-            return new XmlDocument();
         }
     }
 }

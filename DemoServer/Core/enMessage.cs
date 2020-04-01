@@ -7,13 +7,20 @@ namespace DemoServer.Core
     {
         public static bool GetActionName(XmlDocument oMessage, ref string sActionName)
         {
-            sActionName = "ClientActionDealDamage"; // TEMP.
+            sActionName = "ClientActionDealDamage"; // TMP.
             return true;
         }
 
         public static XmlDocument CreateErrorMessage(string sErrorMessage)
         {
+            // TODO.
             return new XmlDocument();
+        }
+
+        public static XmlDocument CreateMessage(string sMessageName, XmlDocument oData)
+        {
+            // TODO.
+            return oData;
         }
     }
 }

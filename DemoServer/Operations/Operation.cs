@@ -11,9 +11,9 @@ namespace DemoServer
 {
     public class Operation
     {
-        public GameRoom.GameStatus GameStatus = null;
+        public GameRoom GameRoom { get; set; }
 
-        public virtual void Execute()
+        public virtual void Execute(GameRoom.GameStatus oGameStatus)
         {
 
         }

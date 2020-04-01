@@ -7,6 +7,7 @@ namespace DemoServer
         static void Main(string[] args)
         {
             GameServer oGameServer = new GameServer();
+            oGameServer.Init();
             oGameServer.Start();
         }       
     }

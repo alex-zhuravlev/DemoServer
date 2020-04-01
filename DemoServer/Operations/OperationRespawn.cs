@@ -11,17 +11,16 @@ using System.Drawing;
 
 namespace DemoServer
 {
-    public class OperationMove : Operation
+    public class OperationRespawn : Operation
     {
         private ulong m_iPlayerId = 0L;
         private Point m_p2Offset;
 
-        private OperationMove() { }
+        private OperationRespawn() { }
 
-        public OperationMove(ulong iPlayerId, Point p2Offset)
+        public OperationRespawn(ulong iPlayerId)
         {
             m_iPlayerId = iPlayerId;
-            m_p2Offset = p2Offset;
         }
 
         public override void Execute(GameRoom.GameStatus oGameStatus)
@@ -29,10 +28,15 @@ namespace DemoServer
             int iIndex = oGameStatus.Players.FindIndex(item => item.Id == m_iPlayerId);
             if (iIndex != -1)
             {
-                Point p2Pos = oGameStatus.Players[iIndex].Position;
-                p2Pos.X += m_p2Offset.X;
-                p2Pos.Y += m_p2Offset.Y;
-                oGameStatus.Players[iIndex].Position = p2Pos;
+                Point p2Pos = new Point();
+                p2Pos.X = enRandom.Get(0, 1000); // TMP.
+                p2Pos.Y = enRandom.Get(0, 1000); // TMP.
+
+                oGameStatus.Players[iIndex].Health = 100;
+                oGameStatus.Players[iIndex].Position = p2Pos; // Respawn at random position.
+
+                // TODO. Discard all operations applied to this iPlayerId but in previous life
+                // TODO. Respond to client
             }
         }
     }

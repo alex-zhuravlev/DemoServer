@@ -13,9 +13,9 @@ namespace DemoServer
     {
         public ActionFactory()
         {
-            Register("ClientMessageMove", typeof(ClientActionMove));
-            Register("ClientMessageDealDamage", typeof(ClientActionDealDamage));
-            Register("ClientMessageHeal", typeof(ClientActionHeal));
+            Register("ClientActionMove", typeof(ClientActionMove));
+            Register("ClientActionDealDamage", typeof(ClientActionDealDamage));
+            Register("ClientActionHeal", typeof(ClientActionHeal));
         }
     }
 }
