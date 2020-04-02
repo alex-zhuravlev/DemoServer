@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace DemoServer
@@ -71,6 +72,8 @@ namespace DemoServer
         {
             lock (m_oGameStatus)
             {
+                Thread.Sleep(10); // Synthetic delay
+
                 // TODO. Build up game data relative to iClientId (also limit by client's viewport)
                 return new XmlDocument();
             }

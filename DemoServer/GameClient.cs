@@ -61,6 +61,13 @@ namespace DemoServer
                         break;
                     }
 
+                    if (!oAction.Init(oMessage))
+                    {
+                        Console.WriteLine(String.Format("Failed to init action[MessageName={0}]", sActionName));
+                        SendErrorMessage("Invalid message");
+                        break;
+                    }
+
                     oAction.GameClient = this;
                     oAction.Execute();
                 }
